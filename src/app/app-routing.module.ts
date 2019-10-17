@@ -5,7 +5,7 @@ import {ScheduleComponent} from './schedule/schedule.component';
 import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [{path: '', component: UserProfileComponent },
-                        {path: 'login', redirectTo: '', pathMatch: 'full' },
+                        {path: 'logfin', redirectTo: '', pathMatch: 'full' },
                         {path: 'schedule', component: ScheduleComponent, canActivate: [AuthGuard]}];
 
 @NgModule({
