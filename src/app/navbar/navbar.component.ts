@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService, User } from '../auth.service';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -6,10 +8,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-
-  constructor() { }
+  user: User;
+navOpen = false;
+  constructor(public auth: AuthService) {
+    this.auth.user$.subscribe(user => this.user = user);
+  }
 
   ngOnInit() {
   }
 
+  toggleNavbar(){
+    this.navOpen = !this.navOpen;
+  }
 }

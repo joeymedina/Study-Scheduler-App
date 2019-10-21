@@ -18,3 +18,31 @@ body {
 .btn-purple:hover {
     background-color: #3f125c
 }
+
+.border-bottom-yellow {
+    border-bottom: 1px solid #d1d099;
+}
+
+.border-yellow {
+    border: 1px solid #d1d099;
+}
+
+.text-purple {
+    color: #3f125c !important;
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+.header-divider {
+    width: 90%;
+    background: transparent url(//ddoie2e1uy9qo.cloudfront.net/images/Divider-Tablet.png) no-repeat 50%;
+    height: 2px;
+}
+
+.header-text {
+    font-weight: 300;
+    font-size: 40px;
+    color: #bba064;
+}

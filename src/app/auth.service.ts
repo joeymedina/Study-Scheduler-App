@@ -67,4 +67,20 @@ export class AuthService {
     await this.afAuth.auth.signOut();
     this.router.navigate(['/']);
   }
+
+
+  homeRedirect() {
+    this.router.navigate(['/']);
+  }
+
+  meetingsRedirect() {
+    this.router.navigate(['/meetings']);
+  }
+
+  friendsRedirect() {
+    this.router.navigate(['/friendss']);
+  }
+  
+
 }
+
