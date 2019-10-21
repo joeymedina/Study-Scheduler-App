@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthService, User } from '../auth.service';
 import { of } from 'rxjs';
+
+
 
 @Component({
   selector: 'app-navbar',
@@ -8,16 +10,30 @@ import { of } from 'rxjs';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  user: User;
+@ViewChild('collapseExample', {static: false}) el: ElementRef;
+
+user: User;
 navOpen = false;
-  constructor(public auth: AuthService) {
+isUserCollapsed = true;
+
+constructor(public auth: AuthService) {
     this.auth.user$.subscribe(user => this.user = user);
   }
 
   ngOnInit() {
   }
 
-  toggleNavbar(){
+  toggleNavbar() {
     this.navOpen = !this.navOpen;
   }
+
+  collapse() {
+
+    this.isUserCollapsed = !this.isUserCollapsed;
+    // document.getElementById('account-info').style.display = this.isUserCollapsed ? '' : 'none';
+  }
+
+
+
 }
+

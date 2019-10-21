@@ -9,9 +9,16 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class UserProfileComponent implements OnInit {
 
+isCollapsed = true;
+
   constructor(public auth: AuthService) { }
 
   ngOnInit() {
   }
+  collapse() {
+
+    this.isCollapsed = !this.isCollapsed;
+  }
+
 
 }

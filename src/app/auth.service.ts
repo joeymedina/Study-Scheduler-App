@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -26,7 +26,8 @@ export class AuthService {
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
-    private router: Router) {
+    private router: Router,
+    private ngzone: NgZone) {
 
       this.user$ = this.afAuth.authState.pipe(
         switchMap(user => {
@@ -45,7 +46,7 @@ export class AuthService {
   async googleSignin() {
     const provider = new auth.GoogleAuthProvider();
     const credential = await this.afAuth.auth.signInWithPopup(provider);
-    return this.updateUserData(credential.user);
+    return this.updateUserData(credential.user).then(() => { this.ngzone.run(() => this.router.navigate(['schedule'])); });
   }
 
   private updateUserData(user) {
@@ -80,7 +81,6 @@ export class AuthService {
   friendsRedirect() {
     this.router.navigate(['/friendss']);
   }
-  
 
 }
 

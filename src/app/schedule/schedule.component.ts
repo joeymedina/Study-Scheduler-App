@@ -6,10 +6,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./schedule.component.css']
 })
 export class ScheduleComponent implements OnInit {
+isCollapsed = true;
 
-  constructor() { }
+constructor() { }
 
   ngOnInit() {
   }
 
+collapse() {
+
+  this.isCollapsed = !this.isCollapsed;
 }
+
+
+}
+
+

@@ -20,7 +20,7 @@
             <a class="nav-link text-purple text-right" (click)="auth.friendsRedirect(); toggleNavbar();">Friends</a>
           </li> 
           <li *ngIf="auth.user$ | async" class="nav-item">
-            <a class="nav-link text-purple text-right" (click)="auth.homeRedirect(); toggleNavbar();">Account</a>
+            <a class="nav-link text-purple text-right" (click)="auth.homeRedirect(); collapse() ;toggleNavbar();">Account</a>
           </li>
           <li *ngIf="auth.user$ | async">
             <button class="btn btn-purple btn-info btn-sm m-1" (click)="auth.signOut(); toggleNavbar();">Logout</button>
