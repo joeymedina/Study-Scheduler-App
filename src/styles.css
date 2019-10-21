@@ -1,2 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~bootstrap/dist/css/bootstrap-reboot';
+@import '~bootstrap/dist/css/bootstrap-grid';
+
+body {
+    min-height: 75rem;
+    padding-top: 4rem;
+    background-color: #fff3fc;
+}
+
+.btn-purple {
+    color: #fff;
+    background-color: #c295dd;
+    border-color: #634f70;
+}
+
+.btn-purple:hover {
+    background-color: #3f125c
+}

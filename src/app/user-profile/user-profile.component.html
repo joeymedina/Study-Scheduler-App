@@ -2,26 +2,39 @@
 
 <!-- logged out -->
 <ng-template #guest>
-<div class="card mx-auto ml-4 mr-4 border-gold text-center p-5">
-    <h3>Welcome to Study App</h3>
-<h5 class="mb-5 mt-4">Login to get started...</h5>
-
-<button (click)="auth.googleSignin()">
-    <i class="fa fa-google"></i> Login with Google
-</button>
-</div>
+    <div class="card mx-auto ml-4 mr-4 border-gold text-center p-5">
+        <h3>Welcome to Study App</h3>
+        <h5 class="mb-5 mt-4">Login to get started...</h5>
+        <div class="justify-content">
+            <button class="btn btn-info btn-purple btn-lg" (click)="auth.googleSignin()">
+                Login with Google
+            </button>
+        </div>
+    </div>
 </ng-template>
 
 
 <!-- logged in -->
 <ng-template #authenticated>
-<div *ngIf="auth.user$ | async as user">
-    <h3>Hey, {{ user.name }}   </h3> <button (click)="auth.signOut()">Logout</button>
-    <br> 
-    Profile Picture: <img  height="100px" width="100px" [src]="user.photoURL">
-    <p>UID: {{ user.uid }}</p>
-    <p>email: {{ user.email }}</p>
-    <p>school: {{ user.school}}</p>
-    
-</div>
+    <div *ngIf="auth.user$ | async as user">
+        <div class="card mx-auto ml-4 mr-4 border-dark text-center p-5">
+
+            <h3>Welcome, {{ user.name }} </h3>
+           
+            <img class="user-img-smaller rounded-circle card-img-top mx-auto mt-4" height="100px" width="100px"
+                    [src]="user.photoURL">
+            <div class="" id="account-info">
+                <br>
+                <h4> Account Information</h4>
+                
+                <p>UID: {{ user.uid }}</p>
+                <p>email: {{ user.email }}</p>
+                <p>school: {{ user.school}}</p>
+                <button class="btn btn-purple btn-info btn-md m-1" (click)="auth.signOut()">Logout</button>
+                <br>
+            </div>
+        </div>
+
+    </div>
+
 </ng-template>
