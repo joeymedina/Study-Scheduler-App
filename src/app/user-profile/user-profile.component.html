@@ -2,13 +2,14 @@
 
 <!-- logged out -->
 <ng-template #guest>
-<h3>Hola, GUEST</h3>
-<p>Login to get started...</p>
+<div class="card mx-auto ml-4 mr-4 border-gold text-center p-5">
+    <h3>Welcome to Study App</h3>
+<h5 class="mb-5 mt-4">Login to get started...</h5>
 
 <button (click)="auth.googleSignin()">
-    <i class="fa fa-google"></i> Connect Google
+    <i class="fa fa-google"></i> Login with Google
 </button>
-
+</div>
 </ng-template>
 
 
