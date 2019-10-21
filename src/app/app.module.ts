@@ -7,6 +7,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 const config = {
   apiKey: 'AIzaSyCDBbEVUQ33nE_aUE8oNtIuhTLxob5KWmE',
@@ -23,7 +24,8 @@ const config = {
   declarations: [
     AppComponent,
     UserProfileComponent,
-    ScheduleComponent
+    ScheduleComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
