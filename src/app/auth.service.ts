@@ -79,8 +79,11 @@ export class AuthService {
   }
 
   friendsRedirect() {
-    this.router.navigate(['/friendss']);
+    this.router.navigate(['/friends']);
   }
-
+  
+  scheduleRedirect() {
+    this.router.navigate(['/schedule']);
+  }
 }
 
