@@ -8,6 +8,9 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { ScheduleModule } from '@syncfusion/ej2-angular-schedule';
+import { LoginComponent } from './login/login.component';
+
 
 const config = {
   apiKey: 'AIzaSyCDBbEVUQ33nE_aUE8oNtIuhTLxob5KWmE',
@@ -25,7 +28,9 @@ const config = {
     AppComponent,
     UserProfileComponent,
     ScheduleComponent,
-    NavbarComponent
+    NavbarComponent,
+    LoginComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -33,6 +38,7 @@ const config = {
     AngularFireModule.initializeApp(config),
     AngularFirestoreModule,
     AngularFireAuthModule,
+    ScheduleModule
   ],
   providers: [],
   bootstrap: [AppComponent]

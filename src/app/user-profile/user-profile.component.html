@@ -1,7 +1,7 @@
 <div *ngIf="auth.user$ | async; then authenticated else guest"></div>
 
 <!-- logged out -->
-<ng-template #guest>
+<!-- <ng-template #guest>
     <div class="col-md-10 mx-auto">
         <div class="card mx-auto ml-4 mr-4 border-yellow text-center p-5">
             <h3>Welcome to Study App</h3>
@@ -14,11 +14,11 @@
         </div>
     </div>
     
-</ng-template>
+</ng-template> -->
 
 
 <!-- logged in -->
-<ng-template #authenticated>
+
     <div *ngIf="auth.user$ | async as user">
 
         <div class="col-md-10 mx-auto">
@@ -50,4 +50,3 @@
 
     </div>
 
-</ng-template>

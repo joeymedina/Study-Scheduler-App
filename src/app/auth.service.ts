@@ -46,7 +46,8 @@ export class AuthService {
   async googleSignin() {
     const provider = new auth.GoogleAuthProvider();
     const credential = await this.afAuth.auth.signInWithPopup(provider);
-    return this.updateUserData(credential.user).then(() => { this.ngzone.run(() => this.router.navigate(['schedule'])); });
+
+    return this.updateUserData(credential.user).then(() => { this.ngzone.run(() => this.scheduleRedirect()); });
   }
 
   private updateUserData(user) {
@@ -79,8 +80,15 @@ export class AuthService {
   }
 
   friendsRedirect() {
-    this.router.navigate(['/friendss']);
+    this.router.navigate(['/friends']);
   }
 
+  accountRedirect() {
+    this.router.navigate(['/account']);
+  }
+
+  scheduleRedirect() {
+    this.router.navigate(['/schedule']);
+  }
 }
 

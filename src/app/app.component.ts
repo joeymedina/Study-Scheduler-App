@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-
+import { DayService, WeekService, WorkWeekService, MonthService, AgendaService } from '@syncfusion/ej2-angular-schedule';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [DayService, WeekService, WorkWeekService, MonthService, AgendaService ]
 })
 export class AppComponent {
   title = 'login';

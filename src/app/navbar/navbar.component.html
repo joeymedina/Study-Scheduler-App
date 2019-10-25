@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-pink fixed-top border-bottom-yellow">
     <div class="container-fluid">
-      <a class="navbar-brand text-purple" (click)="auth.homeRedirect(user)">
+      <a class="navbar-brand text-purple" (click)="auth.scheduleRedirect(user)">
         Study App
       </a>
       <button *ngIf="user" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
@@ -14,13 +14,16 @@
             <a class="nav-link text-purple text-right" (click)="auth.homeRedirect(); toggleNavbar();">Login</a>
           </li>
           <li *ngIf="auth.user$ | async" class="nav-item">
+              <a class="nav-link text-purple text-right" (click)="auth.scheduleRedirect(); toggleNavbar();">My Schedule</a>
+            </li> 
+          <li *ngIf="auth.user$ | async" class="nav-item">
             <a class="nav-link text-purple text-right" (click)="auth.meetingsRedirect(); toggleNavbar();">Meetings</a>
           </li> 
           <li *ngIf="auth.user$ | async" class="nav-item">
             <a class="nav-link text-purple text-right" (click)="auth.friendsRedirect(); toggleNavbar();">Friends</a>
           </li> 
           <li *ngIf="auth.user$ | async" class="nav-item">
-            <a class="nav-link text-purple text-right" (click)="auth.homeRedirect(); collapse() ;toggleNavbar();">Account</a>
+            <a class="nav-link text-purple text-right" (click)="auth.accountRedirect(); collapse() ;toggleNavbar();">Account</a>
           </li>
           <li *ngIf="auth.user$ | async">
             <button class="btn btn-purple btn-info btn-sm m-1" (click)="auth.signOut(); toggleNavbar();">Logout</button>
