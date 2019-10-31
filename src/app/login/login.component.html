@@ -1,12 +1,19 @@
-<div class="col-md-10 mx-auto">
-        <div class="card mx-auto ml-4 mr-4 border-yellow text-center p-5">
-            <h3>Welcome to Study App</h3>
-            <h5 class="mb-5 mt-4">Login to get started...</h5>
-            <div class="justify-content">
-                <button class="btn btn-info btn-purple btn-lg" (click)="auth.googleSignin()">
-                    Login with Google
-                </button>
+<div *ngIf="auth.user$ | async; then authenticated else guest"></div>
+
+    <ng-template #guest>
+        <div class="col-md-10 mx-auto">
+            <div class="card mx-auto ml-4 mr-4 border-yellow text-center p-5">
+                <h3>Welcome to Study App</h3>
+                <h5 class="mb-5 mt-4">Login to get started...</h5>
+                <div class="justify-content">
+                    <button class="btn btn-info btn-purple btn-lg" (click)="auth.googleSignin()">
+                        Login with Google
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-    
+    </ng-template>
+
+    <ng-template #authenticated>
+        </ng-template>
+

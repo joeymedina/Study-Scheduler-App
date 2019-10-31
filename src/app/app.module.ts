@@ -10,7 +10,10 @@ import { ScheduleComponent } from './schedule/schedule.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ScheduleModule } from '@syncfusion/ej2-angular-schedule';
 import { LoginComponent } from './login/login.component';
-
+import { MeetingsComponent } from './meetings/meetings.component';
+import { FriendsComponent } from './friends/friends.component';
+import { AngularFireDatabase } from '@angular/fire/database';
+import { FormsModule } from '@angular/forms';
 
 const config = {
   apiKey: 'AIzaSyCDBbEVUQ33nE_aUE8oNtIuhTLxob5KWmE',
@@ -30,6 +33,8 @@ const config = {
     ScheduleComponent,
     NavbarComponent,
     LoginComponent,
+    MeetingsComponent,
+    FriendsComponent,
 
   ],
   imports: [
@@ -38,9 +43,10 @@ const config = {
     AngularFireModule.initializeApp(config),
     AngularFirestoreModule,
     AngularFireAuthModule,
-    ScheduleModule
+    ScheduleModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [AngularFireDatabase],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

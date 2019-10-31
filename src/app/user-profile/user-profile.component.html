@@ -19,34 +19,54 @@
 
 <!-- logged in -->
 
-    <div *ngIf="auth.user$ | async as user">
+<div *ngIf="auth.user$ | async as user">
 
-        <div class="col-md-10 mx-auto">
+    <div class="col-md-10 mx-auto">
 
-            <div class="card-header text-center border-yellow">
-                <h4>Account Information</h4>
+        <div class="card-header text-center border-yellow">
+            <h4>Account Information</h4>
 
-            </div>
+        </div>
 
-            <div id="account-info" *ngIf="isCollapsed" class="card mx-auto ml-4 mr-4 border-yellow text-center p-5">
+        <div id="account-info" *ngIf="isCollapsed" class="card mx-auto ml-4 mr-4 border-yellow text-center p-5">
 
-                <h3>Welcome, {{ user.name }} </h3>
+            <h3>Welcome, {{ user.name }} </h3>
 
-                <img class="user-img-smaller rounded-circle card-img-top mx-auto mt-4" [src]="user.photoURL">
-                <div class="" id="account-info">
-                    <br>
+            <img class="user-img-smaller rounded-circle card-img-top mx-auto mt-4" [src]="user.photoURL">
+            <div class="" id="account-info">
+                <br>
 
 
-                    <p>UID: {{ user.uid }}</p>
-                    <p>email: {{ user.email }}</p>
-                    <p>school: {{ user.school}}</p>
-                    <button class="btn btn-purple btn-info btn-md m-1">Change School</button>
-                    <button class="btn btn-purple btn-info btn-md m-1" (click)="auth.signOut()">Logout</button>
-                    <br>
-                </div>
+                <p>UID: {{ user.uid }}</p>
+                <p>email: {{ user.email }}</p>
+                <p>school: {{ user.school }} </p>
+                <input value="{{ user.uid }}"  >
+                <!-- <i (click)="edit($event, user)" class="fa fa-pencil"></i> -->
+                <form>
+                    Change School: 
+                    <input [(ngModel)]="cSchool" name="school"><br>
+                    <button class="btn btn-purple btn-info btn-md m-1"
+                        (click)="updateVal()">Change School to KSTATE</button>
+                </form>
+
+                <!-- <div *ngIf="editUser">
+
+                    <form (ngSubmit)="updateUser(user)">
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input type="text" [(ngModel)="user.school" ] name="school">
+                            </div>
+                            <input type="submit" value="save" class="btn">
+                        </div>
+                    </form>
+                </div> -->
+
+                <button class="btn btn-purple btn-info btn-md m-1">Change School</button>
+                <button class="btn btn-purple btn-info btn-md m-1" (click)="auth.signOut()">Logout</button>
+                <br>
             </div>
         </div>
-        <!-- schedule -->
-
     </div>
+    <!-- schedule -->
 
+</div>

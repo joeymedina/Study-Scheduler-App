@@ -8,7 +8,7 @@
         <span *ngIf="user" class="navbar-toggler-icon"></span>
       </button>
       
-      <div class="collapse navbar-collapse" id="navbarResponsive" [ngClass]="{ 'show': navbarOpen }">
+      <div class="collapse navbar-collapse" id="navbarResponsive" [ngClass]="{ 'show': navOpen }">
         <ul class="navbar-nav ml-auto">
           <li *ngIf="!auth.user$ | async" class="nav-item">
             <a class="nav-link text-purple text-right" (click)="auth.homeRedirect(); toggleNavbar();">Login</a>
@@ -26,7 +26,7 @@
             <a class="nav-link text-purple text-right" (click)="auth.accountRedirect(); collapse() ;toggleNavbar();">Account</a>
           </li>
           <li *ngIf="auth.user$ | async">
-            <button class="btn btn-purple btn-info btn-sm m-1" (click)="auth.signOut(); toggleNavbar();">Logout</button>
+            <button class="btn btn-purple btn-info btn-sm m-1 float-right" (click)="auth.signOut(); toggleNavbar();">Logout</button>
           </li>
           
         </ul>

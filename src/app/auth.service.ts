@@ -17,12 +17,13 @@ export interface User {
 }
 
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   user$: Observable<User>;
-
+  cUid: string;
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
@@ -47,22 +48,24 @@ export class AuthService {
     const provider = new auth.GoogleAuthProvider();
     const credential = await this.afAuth.auth.signInWithPopup(provider);
 
-    return this.updateUserData(credential.user).then(() => { this.ngzone.run(() => this.scheduleRedirect( )); });
+    return this.updateUserDataGoogle(credential.user).then(() => { this.ngzone.run(() => this.scheduleRedirect( )); });
   }
 
-  private updateUserData(user) {
+  private updateUserDataGoogle(user: firebase.User) {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+    this.cUid = user.uid;
 
     const data: User = {
       uid: user.uid,
       name: user.displayName,
       email: user.email,
       photoURL: user.photoURL,
-      school: user.school ? user.school : ''
     };
-
     return userRef.set(data, {merge: true});
   }
+
+
+
 
   async signOut() {
 

@@ -25,6 +25,7 @@ constructor(public auth: AuthService) {
 
   toggleNavbar() {
     this.navOpen = !this.navOpen;
+    console.log(this.navOpen);
   }
 
   collapse() {
