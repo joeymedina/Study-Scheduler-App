@@ -1,5 +1,48 @@
-<p>friends works!</p>
+<div *ngIf="auth.user$ | async as user">
 
-<div id="Schedule">
-    
+    <div class="col-md-10 mx-auto">
+
+        <div class="card-header text-center border-yellow">
+            <h4>Friends</h4>
+
+        </div>
+
+        <div id="friends-main" class="card mx-auto ml-4 mr-4 border-yellow text-center p-4">
+            <div class="card-body">
+                <h3>Here are your friends, {{ user.name }} </h3>
+                <div class="" id="friends-info">
+                    <br>
+                    <p>UID: {{ user.uid }}</p>
+                </div>
+
+                <br>
+                <div id="add-friends">
+
+                    <h3>Add Friends</h3>
+                    <div class="search">
+                        <form action="">
+                            <input type="text" placeholder="Search.." name="search">
+                            <button type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+
+                    <ul>
+                        <li *ngFor="let user of users | async">
+                            <b> {{ user.name }} </b> is {{ user.uid }} <button *ngIf="this.notAdded"
+                                (click)="addFriend(user.uid)" class="btn btn-purple btn-info btn-md m-1"> Add</button>
+                            <button *ngIf="this.remove" (click)="removeFriend(user.uid)"
+                                class="btn btn-purple btn-info btn-md m-1"> Remove</button>
+
+                        </li>
+                    </ul>
+                </div>
+
+
+
+            </div>
+
+        </div>
+    </div>
+
+
 </div>

@@ -15,6 +15,7 @@ import { FriendsComponent } from './friends/friends.component';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { FormsModule } from '@angular/forms';
 
+
 const config = {
   apiKey: 'AIzaSyCDBbEVUQ33nE_aUE8oNtIuhTLxob5KWmE',
   authDomain: 'test-studyapp-1.firebaseapp.com',
