@@ -15,7 +15,7 @@
                     <p>UID: {{ user.uid }}</p>
                 </div>
 
-                <br>
+                <!-- <br>
                 <div id="add-friends">
 
                     <h3>Add Friends</h3>
@@ -35,8 +35,10 @@
 
                         </li>
                     </ul>
-                </div>
-
+                </div> -->
+                <div *ngFor="let user of users | async">
+                    <app-friends-list [(user)]= "user" [(currentUser)]= "currentUser"> </app-friends-list>
+                  </div>
 
 
             </div>

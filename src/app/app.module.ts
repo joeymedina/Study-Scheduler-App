@@ -14,6 +14,7 @@ import { MeetingsComponent } from './meetings/meetings.component';
 import { FriendsComponent } from './friends/friends.component';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { FormsModule } from '@angular/forms';
+import { FriendsListComponent } from './friends-list/friends-list.component';
 
 
 const config = {
@@ -36,6 +37,7 @@ const config = {
     LoginComponent,
     MeetingsComponent,
     FriendsComponent,
+    FriendsListComponent
 
   ],
   imports: [

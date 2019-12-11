@@ -1,0 +1,15 @@
+<div class="profile">
+    
+    {{user.name}}
+    <div *ngIf="isFriend; then unfriendButton; else friendButton">
+        button renders here
+    </div>
+  </div>
+  
+  <ng-template #friendButton>
+    <button class="btn btn-purple btn-info btn-md m-1" (click)="toggleFriend()">Add Friend</button>
+  </ng-template>
+  
+  <ng-template #unfriendButton>
+    <button class="btn btn-purple btn-info btn-md m-1" (click)="toggleFriend()">Unfriend</button>
+  </ng-template>

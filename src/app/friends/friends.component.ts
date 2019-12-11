@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Schedule, Day, Week, WorkWeek, Month, Agenda, EventRenderedArgs, Resize, DragAndDrop } from '@syncfusion/ej2-schedule';
 // import * as dataSource from './datasource.json';
 import { extend, EmitType } from '@syncfusion/ej2-base';
@@ -9,7 +9,7 @@ import { FriendsService, Friend } from '../friends.service';
 import { map } from 'rxjs/operators';
 import * as firebase from 'firebase';
 Schedule.Inject(Day, Week, WorkWeek, Month, Agenda, Resize, DragAndDrop);
-
+import {FriendsListComponent} from '../friends-list/friends-list.component';
 
 export interface User {
   uid: string;
@@ -27,7 +27,7 @@ export interface UserId extends User { id: string; }
   selector: 'app-friends',
   templateUrl: './friends.component.html',
   styleUrls: ['./friends.component.css'],
-  providers: [FriendsService]
+  providers: [FriendsService, FriendsListComponent]
 })
 export class FriendsComponent implements OnInit {
   events: Observable<any>;
@@ -38,15 +38,16 @@ export class FriendsComponent implements OnInit {
   remove: boolean;
   friendsDocument: AngularFirestoreDocument<any>;
   id: string;
-
+  yourFriendsDocument: AngularFirestoreDocument<any>;
 
 
   constructor(public auth: AuthService, public f: FriendsService, public afs: AngularFirestore) {
 
-    this.id = this.auth.cUid;
+    this.id = firebase.auth().currentUser.uid;
     this.notAdded = true;
     this.usersCollection = this.afs.collection('users/');
     this.friendsDocument = this.afs.doc(`friends/` + this.id);
+  
     // this.user = this.usersCollection.snapshotChanges().map(actions => {
     //   return actions.map(a => {
     //     const data = a.payload.doc.data() as User;
@@ -62,16 +63,23 @@ export class FriendsComponent implements OnInit {
         return { id, ...data };
       }))
     );
+
   }
 
 
 addFriend(friendToAdd) {
-  // console.log(this.id + 'huh');
+  console.log(this.id + 'huh');
   this.notAdded = false;
   this.remove = true;
   this.friendsDocument.update(
-    { friendsList: firebase.firestore.FieldValue.arrayUnion(friendToAdd)}
+    { friendsList: firebase.firestore.FieldValue.arrayUnion({[friendToAdd] : true, added : false})}
   );
+
+  // adds your id to 'friends' friend list
+  this.yourFriendsDocument = this.afs.doc(`friends/` + friendToAdd);
+  this.yourFriendsDocument.update(
+     { friendsList: firebase.firestore.FieldValue.arrayUnion({[this.id] : true})}
+   );
 
   console.log(friendToAdd);
 
@@ -80,17 +88,26 @@ addFriend(friendToAdd) {
 removeFriend(friendToRemove) {
   this.notAdded = true;
   this.remove = false;
+  
   this.friendsDocument.update(
-    { friendsList: firebase.firestore.FieldValue.arrayRemove(friendToRemove)}
+    { friendsList: firebase.firestore.FieldValue.arrayRemove({[friendToRemove]: true, added: false})}
   );
+
+  // removes you from their friendslist
+  this.yourFriendsDocument = this.afs.doc(`friends/` + friendToRemove);
+  this.yourFriendsDocument.update(
+     { friendsList: firebase.firestore.FieldValue.arrayRemove({[this.id] : true})}
+   );
   console.log(friendToRemove + 'removed');
 }
 
 
 
-ngOnInit() {
 
-  console.log(this.friend);
+
+
+
+ngOnInit() {
 
 
 
