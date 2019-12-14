@@ -13,9 +13,15 @@ import { LoginComponent } from './login/login.component';
 import { MeetingsComponent } from './meetings/meetings.component';
 import { FriendsComponent } from './friends/friends.component';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FriendsListComponent } from './friends-list/friends-list.component';
-
+import {
+  MatInputModule,
+  MatFormFieldModule
+} from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MeetingsService } from './meetings.service';
+import { UserFriendListComponent } from './user-friend-list/user-friend-list.component';
 
 const config = {
   apiKey: 'AIzaSyCDBbEVUQ33nE_aUE8oNtIuhTLxob5KWmE',
@@ -37,7 +43,8 @@ const config = {
     LoginComponent,
     MeetingsComponent,
     FriendsComponent,
-    FriendsListComponent
+    FriendsListComponent,
+    UserFriendListComponent
 
   ],
   imports: [
@@ -47,9 +54,17 @@ const config = {
     AngularFirestoreModule,
     AngularFireAuthModule,
     ScheduleModule,
-    FormsModule
+    FormsModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    BrowserAnimationsModule
+
   ],
-  providers: [AngularFireDatabase],
+  exports: [
+    MatInputModule
+  ],
+  providers: [AngularFireDatabase, MeetingsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

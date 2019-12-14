@@ -30,6 +30,7 @@ export class FriendsService {
   remove: boolean;
   friendsDocument: AngularFirestoreDocument<any>;
   id: string;
+  name: string;
   yourFriendsDocument: AngularFirestoreDocument<any>;
   friends$: AngularFireList<Friend> = null;
   userId: string;
@@ -45,6 +46,7 @@ export class FriendsService {
     // });
 
     this.id = firebase.auth().currentUser.uid;
+    this.name = firebase.auth().currentUser.displayName;
     this.notAdded = true;
     this.usersCollection = this.afs.collection('users/');
     this.friendsDocument = this.afs.doc(`friends/` + this.id);
@@ -78,36 +80,39 @@ export class FriendsService {
     // Used to see if UserFoo if following UserBar
     return this.db.object(`friends/${followerId}/friendsList/${followedId}`);
   }
-  addFriend(friendToAdd) {
+
+
+  addFriend(friendToAdd, dispName) {
     console.log(this.id + 'huh');
+    // this.afs.doc(`friends/KDd0VmgQNcMZeC8HI8th0AR7xx12/`).update({['x15LHCKzENdDqnyR5aTobgpOBAl2']: true, name: 'tanner'});
     this.notAdded = false;
     this.remove = true;
     this.friendsDocument.update(
-      { friendsList: firebase.firestore.FieldValue.arrayUnion({[friendToAdd] : true})}
+      { friendsList: firebase.firestore.FieldValue.arrayUnion({[friendToAdd] : true, name: dispName})}
     );
   
     // adds your id to 'friends' friend list
     this.yourFriendsDocument = this.afs.doc(`friends/` + friendToAdd);
     this.yourFriendsDocument.update(
-       { friendsList: firebase.firestore.FieldValue.arrayUnion({[this.id] : true})}
+       { friendsList: firebase.firestore.FieldValue.arrayUnion({[this.id] : true, name: this.name})}
      );
   
     console.log(friendToAdd);
-  
+   
   }
 
-  removeFriend(friendToRemove) {
+  removeFriend(friendToRemove, dispName) {
     this.notAdded = true;
     this.remove = false;
 
     this.friendsDocument.update(
-      { friendsList: firebase.firestore.FieldValue.arrayRemove({ [friendToRemove]: true, added: false }) }
+      { friendsList: firebase.firestore.FieldValue.arrayRemove({ [friendToRemove]: true, name: dispName }) }
     );
 
     // removes you from their friendslist
     this.yourFriendsDocument = this.afs.doc(`friends/` + friendToRemove);
     this.yourFriendsDocument.update(
-      { friendsList: firebase.firestore.FieldValue.arrayRemove({ [this.id]: true }) }
+      { friendsList: firebase.firestore.FieldValue.arrayRemove({ [this.id]: true, name: this.name }) }
     );
     console.log(friendToRemove + 'removed');
   }

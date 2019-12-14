@@ -22,24 +22,26 @@ export class FriendsListComponent implements OnInit, OnDestroy {
 
 
 
-  constructor(private friendServ: FriendsService) { this.isFriend = false;}
+  constructor(private friendServ: FriendsService) { this.isFriend = false; }
 
 
 
   ngOnInit() {
 
-    
+
     const userId = this.user.uid;
+
+
     const currentUserId = firebase.auth().currentUser.uid;
-    console.log(userId);
-    console.log(currentUserId);
-    const test = this.friendServ.areFriends(currentUserId, userId);
-    console.log(test);
+
+    // const test = this.friendServ.areFriends('KDd0VmgQNcMZeC8HI8th0AR7xx12', 'r6mWeas5MMRwlEvu7RBpdwHqm633');
+    // console.log(test);
+
     // checks if the currently logged in user is following this.user
-    this.friendsOfMe = this.friendServ.areFriends(currentUserId, userId).valueChanges()
-      .subscribe((friendOfMe: any) => {
-        this.isFriend = friendOfMe.value;
-      });
+    // this.friendsOfMe = this.friendServ.areFriends(currentUserId, userId).valueChanges()
+    //   .subscribe((friendOfMe: any) => {
+    //     this.isFriend = friendOfMe.$value;
+    //   });
 
 
 
@@ -56,15 +58,21 @@ export class FriendsListComponent implements OnInit, OnDestroy {
   }
 
   toggleFriend() {
+
+    // current friend id and name
     const userId = this.user.uid;
+    const name = this.user.name;
+
+    // if you are already friends, remove, else add
+    // TO DO: FIX isFriend method
     if (this.isFriend) {
-      this.friendServ.removeFriend(userId);
+      this.friendServ.removeFriend(userId, name);
       this.isFriend = false;
     } else {
-      this.friendServ.addFriend(userId);
+      this.friendServ.addFriend(userId, name);
       this.isFriend = true;
     }
-    console.log(this.isFriend);
+    console.log('toggle friend ' + this.isFriend);
   }
 
 

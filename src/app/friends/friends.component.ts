@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 import * as firebase from 'firebase';
 Schedule.Inject(Day, Week, WorkWeek, Month, Agenda, Resize, DragAndDrop);
 import {FriendsListComponent} from '../friends-list/friends-list.component';
+import { UserFriendListComponent } from '../user-friend-list/user-friend-list.component';
 
 export interface User {
   uid: string;
@@ -27,7 +28,7 @@ export interface UserId extends User { id: string; }
   selector: 'app-friends',
   templateUrl: './friends.component.html',
   styleUrls: ['./friends.component.css'],
-  providers: [FriendsService, FriendsListComponent]
+  providers: [FriendsService, FriendsListComponent, UserFriendListComponent]
 })
 export class FriendsComponent implements OnInit {
   events: Observable<any>;
@@ -40,7 +41,7 @@ export class FriendsComponent implements OnInit {
   id: string;
   yourFriendsDocument: AngularFirestoreDocument<any>;
 
-
+  friends: any;
   constructor(public auth: AuthService, public f: FriendsService, public afs: AngularFirestore) {
 
     this.id = firebase.auth().currentUser.uid;
@@ -54,6 +55,19 @@ export class FriendsComponent implements OnInit {
     //     const id = a.payload.doc.id;
     //     return { id, ...data };
     //   });;
+    // const getDoc = this.friendsDocument.get()
+    // .toPromise().then(doc => {
+    //   if (!doc.exists) {
+    //     console.log('No such document!');
+    //   } else {
+    //     this.friends = doc.data();
+    //     console.log('Document data:', this.friends);
+
+    //   }
+    // })
+    // .catch(err => {
+    //   console.log('Error getting document', err);
+    // });
 
 
     this.users = this.usersCollection.snapshotChanges().pipe(
@@ -67,12 +81,19 @@ export class FriendsComponent implements OnInit {
   }
 
 
+
+
+
+
+
+
+  
 addFriend(friendToAdd) {
-  console.log(this.id + 'huh');
+  console.log(this.id + 'this is me');
   this.notAdded = false;
   this.remove = true;
   this.friendsDocument.update(
-    { friendsList: firebase.firestore.FieldValue.arrayUnion({[friendToAdd] : true, added : false})}
+    { friendsList: firebase.firestore.FieldValue.arrayUnion({[friendToAdd] : true})}
   );
 
   // adds your id to 'friends' friend list
@@ -81,16 +102,16 @@ addFriend(friendToAdd) {
      { friendsList: firebase.firestore.FieldValue.arrayUnion({[this.id] : true})}
    );
 
-  console.log(friendToAdd);
+  console.log(friendToAdd + 'this is you');
 
 }
 
 removeFriend(friendToRemove) {
   this.notAdded = true;
   this.remove = false;
-  
+
   this.friendsDocument.update(
-    { friendsList: firebase.firestore.FieldValue.arrayRemove({[friendToRemove]: true, added: false})}
+    { friendsList: firebase.firestore.FieldValue.arrayRemove({[friendToRemove] : true})}
   );
 
   // removes you from their friendslist
@@ -98,7 +119,7 @@ removeFriend(friendToRemove) {
   this.yourFriendsDocument.update(
      { friendsList: firebase.firestore.FieldValue.arrayRemove({[this.id] : true})}
    );
-  console.log(friendToRemove + 'removed');
+  console.log(friendToRemove + 'meremoved');
 }
 
 

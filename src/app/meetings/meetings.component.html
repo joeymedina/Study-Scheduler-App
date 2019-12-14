@@ -1,67 +1,81 @@
-<div class="container"></div>
-        <div class="row">
-            <div class="col-md-12 mx-auto">
-    
-                <div *ngIf="auth.user$ | async as user" class="card-header text-center border-yellow">
-                    <h4>{{ user.name }} </h4>
-    
-                </div>
-    
-                <div id="card-body" *ngIf="isCollapsed" class="card mx-auto ml-4 mr-4 border-yellow p-5">
-    
-    
-    
-                    <div class="row">
-                        <div class="col-md-8">
-                            
-                        </div>
-                        <div class="col-md-4">
-    
-                            <div id="friends-list" class="card" style="width: 18rem;">
-                                <div class="card-header">Friends</div>
-                                <div class="card-body scroll">
-                                    <ul>
-                                        <li> Joey </li>
-                                        <li> Brandon </li>
-                                        <li> Dean </li>
-                                        <li> Chris </li>
-                                        <li> Joey </li>
-                                        <li> Brandon </li>
-                                        <li> Dean </li>
-                                        <li> Chris </li>
-                                    </ul>
-    
-                                    
-                                </div>
-    
-                            </div>
-                            <!-- FIX THIS -->
-                            <br>
-                            <br>
-                            <br>
-                            <br>
-                            <br>
-    
-    
-                            <div id="meetings-list" class="card" style="width: 18rem;">
-    
-                                <div class="card-header">Meetings</div>
-                                <div class="card-body scroll">LIST OF MEETINGS
-    
-                                    <ul>
-                                        <li> Meeting 1 </li>
-                                        <li> Meeting 2 </li>
-                                        <li> Meeting 3 </li>
-                                        <li> Meeting 4</li>
-                                        <li> Joey </li>
-                                    </ul>
-                                </div>
-    
-                            </div>
-    
-                        </div>
-                    </div>
-                </div>
-            </div>
-    
+<div *ngIf="auth.user$ | async as user">
+
+    <div class="col-md-10 mx-auto">
+
+        <div class="card-header text-center border-yellow">
+            <h4>Meetings</h4>
+            
         </div>
+
+        <div id="friends-main" class="card mx-auto ml-4 mr-4 border-yellow text-center p-4">
+            <div class="card-body">
+                <h3>Here are your meetings, {{ user.name }} </h3>
+
+                <ul>
+                        <li *ngFor="let meeting of meetings?.meetings">
+                          Name: {{ meeting?.meetingName }} <br>
+                          Notes: {{ meeting?.notes }}<br>
+                          Date: {{ meeting?.date }} <br>
+                          Friends: {{ meeting?.friends }}<br>
+                          
+                        </li>
+                      </ul>
+
+                <div class="" id="friends-info">
+                    <br>
+                    <p>UID: {{ user.uid }}</p>
+
+                    <button *ngIf="!flag" class="btn btn-purple btn-info btn-md m-1" (click)="newMeeting()"
+                        type="submit">New Meeting</button>
+
+                    <div *ngIf="flag" class="row">
+
+                        <div class="col-md-5">
+                            <form [formGroup]="meetingForm" (ngSubmit)="onSubmit()">
+
+                                <label>
+                                    Name:
+                                    <input type="text" formControlName="meetingName">
+                                </label>
+
+                                <label>
+                                    Notes:
+                                    <input type="text" formControlName="notes">
+                                </label>
+                                <label>
+                                    Friends:
+                                    <!-- <input type="text" formControlName="friends"> -->
+                                    <select class="custom-select" formControlName="friends">
+                                        <option value="" disabled>Choose your friend</option>
+                                        <option>Joseph Medina</option>
+                                    </select>
+                                </label>
+
+                                <label>
+                                    Date:
+                                    <input type="text" formControlName="date">
+                                </label>
+                                <br>
+                                <div style="text-align: left">
+                                    <button class="btn btn-purple btn-info btn-md m-1" type="submit">Add
+                                        Meeting</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="col-md-7"> {{ this.meetingForm.value }}</div>
+                    </div>
+
+
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
