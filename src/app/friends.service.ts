@@ -34,23 +34,24 @@ export class FriendsService {
   yourFriendsDocument: AngularFirestoreDocument<any>;
   friends$: AngularFireList<Friend> = null;
   userId: string;
+  test: any;
   friend1: Friend = {
     displayName: 'Joey'
   };
-
+  friendId: any;
+  friendFlag: boolean;
   constructor(private db: AngularFireDatabase, private afAuth: AngularFireAuth, public afs: AngularFirestore) {
     // this.afAuth.authState.subscribe(user => {
     //   if (user) {
     //     this.userId = user.uid;
     //   }
     // });
-
+    this.friendFlag = false;
     this.id = firebase.auth().currentUser.uid;
     this.name = firebase.auth().currentUser.displayName;
     this.notAdded = true;
     this.usersCollection = this.afs.collection('users/');
     this.friendsDocument = this.afs.doc(`friends/` + this.id);
-  
     // this.user = this.usersCollection.snapshotChanges().map(actions => {
     //   return actions.map(a => {
     //     const data = a.payload.doc.data() as User;
@@ -76,9 +77,40 @@ export class FriendsService {
     return this.db.object(`friends/${userId}`);
   }
 
-  areFriends(followerId: string, followedId: string) {
+  areFriends(followerId: string) {
     // Used to see if UserFoo if following UserBar
-    return this.db.object(`friends/${followerId}/friendsList/${followedId}`);
+
+    this.friendsDocument = this.afs.doc(`friends/` + this.id);
+    console.log('user friend list' + this.friendsDocument);
+
+    const getDoc = this.friendsDocument.get()
+      .toPromise().then(doc => {
+        if (!doc.exists) {
+          console.log('No such document!');
+        } else {
+          this.test = doc.data();
+          console.log('Document datad:', this.test.friendsList);
+
+          for (let friend of this.test.friendsList) {
+            if (followerId.localeCompare(friend.id)) {
+              this.friendFlag = true;
+            } else {
+              this.friendFlag = false;
+              console.log('who: ' + friend.id + ' flag: ' + this.friendFlag + ' with: ' + followerId);
+              return this.friendFlag;
+            }
+            console.log('friend: ' + friend.id + ' flag: ' + this.friendFlag + ' compare: ' + followerId);
+          }
+
+        }
+      })
+      .catch(err => {
+        console.log('Error getting document', err);
+      });
+
+    console.log('final flag: ' + this.friendFlag);
+
+    return this.friendFlag;
   }
 
 
@@ -88,17 +120,16 @@ export class FriendsService {
     this.notAdded = false;
     this.remove = true;
     this.friendsDocument.update(
-      { friendsList: firebase.firestore.FieldValue.arrayUnion({[friendToAdd] : true, name: dispName})}
+      { friendsList: firebase.firestore.FieldValue.arrayUnion({ id: friendToAdd, name: dispName }) }
     );
-  
     // adds your id to 'friends' friend list
     this.yourFriendsDocument = this.afs.doc(`friends/` + friendToAdd);
     this.yourFriendsDocument.update(
-       { friendsList: firebase.firestore.FieldValue.arrayUnion({[this.id] : true, name: this.name})}
-     );
-  
+      { friendsList: firebase.firestore.FieldValue.arrayUnion({ id: this.id, name: this.name }) }
+    );
+
     console.log(friendToAdd);
-   
+
   }
 
   removeFriend(friendToRemove, dispName) {
@@ -106,13 +137,13 @@ export class FriendsService {
     this.remove = false;
 
     this.friendsDocument.update(
-      { friendsList: firebase.firestore.FieldValue.arrayRemove({ [friendToRemove]: true, name: dispName }) }
+      { friendsList: firebase.firestore.FieldValue.arrayRemove({ id: friendToRemove, name: dispName }) }
     );
 
     // removes you from their friendslist
     this.yourFriendsDocument = this.afs.doc(`friends/` + friendToRemove);
     this.yourFriendsDocument.update(
-      { friendsList: firebase.firestore.FieldValue.arrayRemove({ [this.id]: true, name: this.name }) }
+      { friendsList: firebase.firestore.FieldValue.arrayRemove({ id: this.id, name: this.name }) }
     );
     console.log(friendToRemove + 'removed');
   }

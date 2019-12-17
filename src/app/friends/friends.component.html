@@ -10,41 +10,35 @@
         <div id="friends-main" class="card mx-auto ml-4 mr-4 border-yellow text-center p-4">
             <div class="card-body">
                 <h3>Here are your friends, {{ user.name }} </h3>
-                <div class="" id="friends-info">
-                    <br>
-                    <p>UID: {{ user.uid }}</p>
-                </div>
-                <app-user-friend-list></app-user-friend-list>
-                <!-- <br>
-                <div id="add-friends">
+                <br>
 
-                    <h3>Add Friends</h3>
-                    <div class="search">
-                        <form action="">
-                            <input type="text" placeholder="Search.." name="search">
-                            <button type="submit"><i class="fa fa-search"></i></button>
-                        </form>
+                <div class="row">
+
+                    <div class="col col-md-6">
+                        <div id="friends-list" class="card">
+                            <div class="card-header">Friends</div>
+                            <div class="card-body">
+                                <app-user-friend-list></app-user-friend-list>
+                            </div>
+
+                        </div>
                     </div>
 
-                    <ul>
-                        <li *ngFor="let user of users | async">
-                            <b> {{ user.name }} </b> is {{ user.uid }} <button *ngIf="this.notAdded"
-                                (click)="addFriend(user.uid)" class="btn btn-purple btn-info btn-md m-1"> Add</button>
-                            <button *ngIf="this.remove" (click)="removeFriend(user.uid)"
-                                class="btn btn-purple btn-info btn-md m-1"> Remove</button>
+                    <div class="col col-md-6">
+                        <div id="users-list" class="card">
+                            <div class="card-header">Users</div>
+                            <div class="card-body">
+                                <div *ngFor="let user of users | async">
+                                    <app-friends-list [(user)]="user" [(currentUser)]="currentUser"> </app-friends-list>
+                                </div>
+                            </div>
 
-                        </li>
-                    </ul>
-                </div> -->
-                <div *ngFor="let user of users | async">
-                    <app-friends-list [(user)]= "user" [(currentUser)]= "currentUser"> </app-friends-list>
-                  </div>
-
-
+                        </div>
+                    </div>
+                </div>
             </div>
-
         </div>
+
+
     </div>
-
-
 </div>

@@ -22,6 +22,9 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MeetingsService } from './meetings.service';
 import { UserFriendListComponent } from './user-friend-list/user-friend-list.component';
+import { UserMeetingListComponent } from './user-meeting-list/user-meeting-list.component';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+
 
 const config = {
   apiKey: 'AIzaSyCDBbEVUQ33nE_aUE8oNtIuhTLxob5KWmE',
@@ -44,7 +47,8 @@ const config = {
     MeetingsComponent,
     FriendsComponent,
     FriendsListComponent,
-    UserFriendListComponent
+    UserFriendListComponent,
+    UserMeetingListComponent
 
   ],
   imports: [
@@ -58,7 +62,8 @@ const config = {
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AccordionModule.forRoot()
 
   ],
   exports: [

@@ -1,9 +1,10 @@
 <div class="profile">
-    
-    {{user.name}}
+  <div class="col col-md-12"> <img class="user-img-smaller rounded-circle card-img-top mx-auto mt-4" [src]="user.photoURL"> </div>
+  <div class="col col-md-12"> <b>{{user.name}} </b>
+    <br>
     <div *ngIf="isFriend; then unfriendButton; else friendButton">
-        button renders here
     </div>
+  </div>
   </div>
   
   <ng-template #friendButton>

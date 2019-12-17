@@ -4,32 +4,22 @@
 
         <div class="card-header text-center border-yellow">
             <h4>Meetings</h4>
-            
+
         </div>
 
         <div id="friends-main" class="card mx-auto ml-4 mr-4 border-yellow text-center p-4">
             <div class="card-body">
                 <h3>Here are your meetings, {{ user.name }} </h3>
 
-                <ul>
-                        <li *ngFor="let meeting of meetings?.meetings">
-                          Name: {{ meeting?.meetingName }} <br>
-                          Notes: {{ meeting?.notes }}<br>
-                          Date: {{ meeting?.date }} <br>
-                          Friends: {{ meeting?.friends }}<br>
-                          
-                        </li>
-                      </ul>
+<br>
+                <app-user-meeting-list></app-user-meeting-list>
 
                 <div class="" id="friends-info">
-                    <br>
-                    <p>UID: {{ user.uid }}</p>
-
                     <button *ngIf="!flag" class="btn btn-purple btn-info btn-md m-1" (click)="newMeeting()"
                         type="submit">New Meeting</button>
 
                     <div *ngIf="flag" class="row">
-
+                        <div class="col-md-4"></div>
                         <div class="col-md-5">
                             <form [formGroup]="meetingForm" (ngSubmit)="onSubmit()">
 
@@ -43,11 +33,16 @@
                                     <input type="text" formControlName="notes">
                                 </label>
                                 <label>
+                                    Location:
+                                    <input type="text" formControlName="location">
+                                </label>
+                                <label>
                                     Friends:
                                     <!-- <input type="text" formControlName="friends"> -->
                                     <select class="custom-select" formControlName="friends">
                                         <option value="" disabled>Choose your friend</option>
-                                        <option>Joseph Medina</option>
+                                        <option *ngFor="let friend of friends?.friendsList" [value]="friend?.name">
+                                            {{ friend?.name }}</option>
                                     </select>
                                 </label>
 
@@ -63,19 +58,20 @@
                             </form>
                         </div>
 
-                        <div class="col-md-7"> {{ this.meetingForm.value }}</div>
                     </div>
-
-
-
+                     
 
 
                 </div>
 
             </div>
 
+
+
+            
         </div>
     </div>
 
 
 </div>
+
