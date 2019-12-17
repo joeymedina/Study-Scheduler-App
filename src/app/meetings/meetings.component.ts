@@ -15,6 +15,7 @@ export interface Meeting {
   time: string;
 }
 
+
 @Component({
   selector: 'app-meetings',
   templateUrl: './meetings.component.html',
