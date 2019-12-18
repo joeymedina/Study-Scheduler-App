@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService, User } from '../auth.service';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument} from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
@@ -7,6 +7,10 @@ import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import * as firebase from 'firebase';
 import { Observable } from 'rxjs';
 import { UserMeetingListComponent } from '../user-meeting-list/user-meeting-list.component';
+import { MatDatepicker } from '@angular/material';
+import { DatePickerComponent } from 'gijgo-angular-wrappers';
+import * as types from 'gijgo';
+
 declare var $: any;
 export interface Meeting {
   meetingName: string;
@@ -20,10 +24,10 @@ export interface Meeting {
   selector: 'app-meetings',
   templateUrl: './meetings.component.html',
   styleUrls: ['./meetings.component.css'],
-  providers: [UserMeetingListComponent]
+  providers: [UserMeetingListComponent, MatDatepicker]
 })
 export class MeetingsComponent implements OnInit {
-  
+
   meetingForm: FormGroup;
   id: string;
   flag: boolean;
@@ -31,6 +35,7 @@ export class MeetingsComponent implements OnInit {
   meetings: any;
   friends: any;
   friendsDocument: AngularFirestoreDocument<any>;
+
   constructor(public auth: AuthService, public afs: AngularFirestore, public mting: MeetingsService) {
 
     // initialize form group
@@ -44,6 +49,7 @@ export class MeetingsComponent implements OnInit {
 
 
     this.id = firebase.auth().currentUser.uid;
+    console.log('id' + this.id);
     this.flag = false;
     this.meetingCollection = afs.collection<Meeting>('meetings');
     this.friendsDocument = this.afs.doc(`friends/` + this.id);
@@ -100,6 +106,7 @@ export class MeetingsComponent implements OnInit {
     console.log(this.flag);
   }
 
+
   // add meeting
   onSubmit() {
     // creates meeting object from form
@@ -111,10 +118,21 @@ export class MeetingsComponent implements OnInit {
       date: this.meetingForm.get('date').value
     };
 
+    const meetingMeet2 = {
+      meetingName: this.meetingForm.get('meetingName').value,
+      notes: this.meetingForm.get('notes').value,
+      location: this.meetingForm.get('location').value,
+      friends: this.id,
+      date: this.meetingForm.get('date').value
+    };
     console.warn(this.meetingForm);
     // adds meetings to database
     this.afs.doc('meetings/' + this.id).update(
       { meetings: firebase.firestore.FieldValue.arrayUnion(meetingMeet) }
+    );
+
+    this.afs.doc('meetings/' + meetingMeet.friends).update(
+      { meetings: firebase.firestore.FieldValue.arrayUnion(meetingMeet2) }
     );
 
     // updates meetings list

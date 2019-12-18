@@ -1,18 +1,68 @@
-<div class="row">
-    <div class="col">
-        <div *ngFor="let meeting of meetings?.meetings">
-            <accordion>
-                <accordion-group heading="{{ meeting?.meetingName }}">
-                    Name: {{ meeting?.meetingName }} <br>
-                    Notes: {{ meeting?.notes }}<br>
-                    Location: {{ meeting?.location }}<br>
-                    Date: {{ meeting?.date }}<br>
-                    Friends: {{ meeting?.friends }}
-                    
-                </accordion-group>
-            </accordion>
-      
-        </div> 
-    </div>
+<ul>
+    <li *ngFor="let meeting of meetings?.meetings">
+        <accordion>
+            <accordion-group heading="{{ meeting?.meetingName }}">
+                <div *ngIf="!editForm">
+                    <b>Name:</b> {{ meeting?.meetingName }} <br>
+                    <b>Notes:</b> {{ meeting?.notes }}<br>
+                    <b>Location:</b> {{ meeting?.location }}<br>
+                    <b>Date:</b> {{ meeting?.date.seconds * 1000 | date: 'short'}}<br>
+                    <b>Friend:</b> {{ meeting?.friends }}<br>
+                </div>
+
+                <div *ngIf="editForm">
+                    <form [formGroup]="meetingForm" (ngSubmit)="onSubmit()">
+
+                        <label>
+                            Name:
+                            <input type="text" formControlName="meetingName" value="{{meeting?.meetingName}}">
+                        </label><br>
+
+                        <label>
+                            Notes:
+                            <input type="text" formControlName="notes" value="{{meeting?.notes}}">
+                        </label><br>
+                        <label>
+                            Location:
+                            <input type="text" formControlName="location" value="{{meeting?.location}}">
+                        </label><br>
+                        <label>
+                            Friend:
+                            <!-- <input type="text" formControlName="friends"> -->
+                            <select class="custom-select" formControlName="friends">
+                                <option value="" disabled>Choose your friend</option>
+                                <option *ngFor="let friend of friends?.friendsList" [value]="friend?.id">
+                                    {{ friend?.name }}</option>
+                            </select>
+                        </label><br>
+
+                        <label>
+                            Date:
+                            <!-- <input type="text" formControlName="date" value="{{meeting?.date}}"> -->
+                            <input [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1"
+                                value="{{ meeting?.date.seconds * 1000 | date: 'short'}}" formControlName="date">
+                            <owl-date-time #dt1></owl-date-time>
+                        </label>
+                        <br>
+                    </form>
+
+                </div>
+
+
+                <button class="btn btn-purple btn-info btn-md m-1" type="submit"
+                    (click)="remove(meeting?.meetingName, meeting?.notes, meeting?.location, meeting?.date, meeting?.friends)">Remove
+                    Meeting</button>
+
+                <button *ngIf="!editForm" class="btn btn-purple btn-info btn-md m-1" type="submit" (click)="edit()">Edit
+                    Meeting</button>
+                <button *ngIf="editForm" class="btn btn-purple btn-info btn-md m-1" type="submit"
+                    (click)="saveEdit(meeting)">Save
+                    Meeting</button>
+                    <button *ngIf="editForm" class="btn btn-purple btn-info btn-md m-1" type="submit" (click)="edit()">Cancel</button>
+            </accordion-group>
+        </accordion>
+
+
+    </li>
     <br>
-</div>
+</ul>

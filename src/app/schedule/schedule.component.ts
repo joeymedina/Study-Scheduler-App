@@ -108,7 +108,7 @@ export class ScheduleComponent implements OnInit {
 
     events: CalendarEvent[] = [];
 
-    activeDayIsOpen: boolean = false;
+    activeDayIsOpen = false;
 
     isEventSubmitted: boolean = false;
 
@@ -180,9 +180,9 @@ export class ScheduleComponent implements OnInit {
     }
 
     getColor(color: string) {
-        if (color === "red") {
+        if (color === 'red') {
             return colors.red;
-        } else if (color === "blue") {
+        } else if (color === 'blue') {
             return colors.blue;
         } else {
             return colors.yellow;

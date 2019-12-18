@@ -17,7 +17,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FriendsListComponent } from './friends-list/friends-list.component';
 import {
   MatInputModule,
-  MatFormFieldModule
+  MatFormFieldModule,
+  MatNativeDateModule
 } from '@angular/material';
 import { MeetingsService } from './meetings.service';
 import { UserFriendListComponent } from './user-friend-list/user-friend-list.component';
@@ -30,8 +31,8 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
-
 
 const config = {
   apiKey: 'AIzaSyCDBbEVUQ33nE_aUE8oNtIuhTLxob5KWmE',
@@ -68,6 +69,7 @@ const config = {
     UserFriendListComponent,
     UserMeetingListComponent
 
+
   ],
   imports: [
     BrowserModule,
@@ -80,7 +82,11 @@ const config = {
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
+    MatDatepickerModule,
     BrowserAnimationsModule,
+    MatNativeDateModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     AccordionModule.forRoot(),
     FlatpickrModule.forRoot(),
     CalendarModule.forRoot({
@@ -96,9 +102,10 @@ const config = {
     RecurrenceEditorModule,
     CommonModule,
     NgbModalModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatDatepickerModule
   ],
-  providers: [AngularFireDatabase, MeetingsService],
+  providers: [AngularFireDatabase, MeetingsService, MatDatepickerModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
