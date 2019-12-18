@@ -90,15 +90,13 @@
               "src/assets"
             ],
             "styles": [
-<<<<<<< Updated upstream
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/styles.css"
-=======
               "src/styles.css",
               "./node_modules/@syncfusion/ej2-material-theme/styles/material.css"
->>>>>>> Stashed changes
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/popper.js/dist/popper.min.js"
+            ]
           }
         },
         "lint": {
