@@ -1,17 +1,18 @@
-<ul>
-    <li *ngFor="let meeting of meetings?.meetings">
-        <accordion>
-            <accordion-group heading="{{ meeting?.meetingName }}">
-                Name: {{ meeting?.meetingName }} <br>
-                Notes: {{ meeting?.notes }}<br>
-                Location: {{ meeting?.location }}<br>
-                Date: {{ meeting?.date }}<br>
-                Friends: {{ meeting?.friends }}
-                
-            </accordion-group>
-          </accordion>
+<div class="row">
+    <div class="col">
+        <div *ngFor="let meeting of meetings?.meetings">
+            <accordion>
+                <accordion-group heading="{{ meeting?.meetingName }}">
+                    Name: {{ meeting?.meetingName }} <br>
+                    Notes: {{ meeting?.notes }}<br>
+                    Location: {{ meeting?.location }}<br>
+                    Date: {{ meeting?.date }}<br>
+                    Friends: {{ meeting?.friends }}
+                    
+                </accordion-group>
+            </accordion>
       
-      
-    </li>
+        </div> 
+    </div>
     <br>
-  </ul>
+</div>

@@ -38,7 +38,7 @@ export class FriendsListComponent implements OnInit, OnDestroy {
     // console.log(test);
 
     // checks if the currently logged in user is following this.user
-    this.friendsOfMe = this.friendServ.areFriends(userId);
+    this.isFriend = this.friendServ.areFriends(userId);
   }
 
 
@@ -47,14 +47,15 @@ export class FriendsListComponent implements OnInit, OnDestroy {
     // current friend id and name
     const userId = this.user.uid;
     const name = this.user.name;
+    const photoURL = this.user.photoURL;
     // this.isFriend = this.friendServ.areFriends(userId);
     // if you are already friends, remove, else add
     // TO DO: FIX isFriend method
     if (this.isFriend) {
-      this.friendServ.removeFriend(userId, name);
+      this.friendServ.removeFriend(userId, name, photoURL);
       // this.isFriend = false;
     } else {
-      this.friendServ.addFriend(userId, name);
+      this.friendServ.addFriend(userId, name, photoURL);
       // this.isFriend = true;
     }
     console.log('toggle friend ' + this.isFriend);

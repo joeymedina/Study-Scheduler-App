@@ -65,49 +65,95 @@
                 (eventTimesChanged)="eventTimesChanged($event)">
             </mwl-calendar-day-view>
         </div>
+        <div class="align-right">
+            <button class="btn btn-primary pull-right m-3" (click)="addEvent_Button()">
+                Add new Event
+            </button>
+            <div class="clearfix"></div>
+        </div>
     </div>
 
     <div class="row mt-3">
-        <div class="col">
-            <div id="friends-list" class="card" style="width: 18rem;">
-                <div class="card-header">Friends</div>
-                <div class="card-body scroll">
-                    <ul>
-                        <li> Joey </li>
-                        <li> Brandon </li>
-                        <li> Dean </li>
-                        <li> Chris </li>
-                        <li> Joey </li>
-                        <li> Brandon </li>
-                        <li> Dean </li>
-                        <li> Chris </li>
-                    </ul>
-                </div>
+        <div id="friends-list" class="card col m-3 text-center p-0" style="width: 18rem;">
+            <div class="card-header text-center">Friends</div>
+            <div class="card-body scroll">
+                <app-user-friend-list></app-user-friend-list>
+            </div>
+        </div>
+        <div id="meetings-list" class="card col m-3 text-center p-0" style="width: 18rem">
+            <div class="card-header text-center">Meetings</div>
+            <div class="card-body">
+                <app-user-meeting-list></app-user-meeting-list>
             </div>
         </div>
     </div>
 
-    <ng-template #modalContent let-close="close">
+    <ng-template #modalAddEvent let-close="close">
         <div class="modal-header">
-            <h5 class="modal-title">Event action occurred</h5>
+            <h5 class="modal-title">Add an Event</h5>
             <button type="button" class="close" (click)="close()">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <div class="modal-body">
-            <div>
-                Action:
-                <pre>{{ modalData?.action }}</pre>
+        <form [formGroup]="newEventForm" (ngSubmit)="submitNewEvent(modalData?.event.id)" id="addEvent" class="form">
+            <div class="modal-body">
+                <input type="text" id="modaltitle" class="mb-3 ml-3 mr-2" placeholder="Title of Event" formControlName="title">
+                <div class="row ml-3 mb-2 align-center">
+                    Select a Color:
+                </div>
+                <div class="row" formGroupName="color">
+                    <div class="col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text bg-danger">
+                                    <input [checked]="colorSelected(modalData?.event.color, 'red')" formControlName="color" value="red" type="radio" name="color" aria-label="Radio button for following text input">
+                                </div>
+                            </div>
+                            <input type="text" value="Red" readonly class="form-control" aria-label="Text input with radio button">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text bg-primary">
+                                    <input [checked]="colorSelected(modalData?.event.color, 'blue')" formControlName="color" value="blue" type="radio" name="color" aria-label="Radio button for following text input">
+                                </div>
+                            </div>
+                            <input type="text" value="Blue" readonly class="form-control" aria-label="Text input with radio button">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text bg-warning">
+                                    <input [checked]="colorSelected(modalData?.event.color, 'yellow')" formControlName="color" value="yellow" type="radio" name="color" aria-label="Radio button for following text input">
+                                </div>
+                            </div>
+                            <input type="text" value="Yellow" readonly class="form-control" aria-label="Text input with radio button">
+                        </div>
+                    </div>
+                </div>
+                <div class="col mt-4">
+                    <input [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" placeholder="Start Date" formControlName="startDate">
+                    <owl-date-time #dt1></owl-date-time>
+                </div>
+                <div class="col mt-3">
+                    <input [owlDateTime]="dt2" [owlDateTimeTrigger]="dt2" placeholder="End Date" formControlName="endDate">
+                    <owl-date-time #dt2></owl-date-time>
+                </div>
+                <div class="col mt-3">
+                    <input class="mr-2" type="checkbox" name="allDay" value="allDay" formControlName="allDay">All Day Event?
+                </div>
+
+                <div class="invalid-feedback" *ngIf="isSubmitted && !modalAddEvent.valid">
+                    <p>Please select required values</p>
+                </div>
             </div>
-            <div>
-                Event:
-                <pre>{{ modalData?.event | json }}</pre>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-outline-secondary">
+                    OK
+                </button>
             </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" (click)="close()">
-                OK
-            </button>
-        </div>
+        </form>
     </ng-template>
 </div>

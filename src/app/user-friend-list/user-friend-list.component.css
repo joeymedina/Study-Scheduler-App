@@ -1,3 +1,7 @@
 ul, ol {
     list-style: none;
-  }
+}
+
+.user-img-smaller {
+    width: 20%;
+}

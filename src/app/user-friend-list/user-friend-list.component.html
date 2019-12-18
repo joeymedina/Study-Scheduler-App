@@ -1,7 +1,16 @@
-<ul>
-        <li *ngFor="let friend of friends?.friendsList">
-          {{ friend?.name }} <br>
-          <br>
-          
-        </li>
-      </ul>
+<div class="row">
+    <div class="col">
+        <div *ngFor="let user of friends | orderBy: 'user':true:true">
+            <div class="profile">
+                <div class="col col-md-12">
+                    <img class="user-img-smaller rounded-circle card-img-top mx-auto mt-4"
+                        [src]="user.photoURL">
+                </div>
+                <div class="col col-md-12"> <b>{{user.name}} </b>
+                    <br>
+                    <button class="btn btn-purple btn-info btn-md m-1" (click)="removeFriend(user)">Unfriend</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

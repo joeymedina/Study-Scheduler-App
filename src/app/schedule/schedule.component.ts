@@ -27,6 +27,10 @@ import {
 } from 'angular-calendar';
 import { AuthService } from '../auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { UserFriendListComponent } from '../user-friend-list/user-friend-list.component';
+import { UserMeetingListComponent } from '../user-meeting-list/user-meeting-list.component';
+import { FriendsService, Friend, friendsList } from '../friends.service';
+import { FormGroup, FormControl, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 
 const colors: any = {
     red: {
@@ -63,10 +67,12 @@ class Event {
     templateUrl: './schedule.component.html',
     styleUrls: ['./schedule.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [UserFriendListComponent, UserMeetingListComponent]
 })
 export class ScheduleComponent implements OnInit {
-    @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
+    @ViewChild('modalEditEvent', { static: true }) modalEditEvent: TemplateRef<any>;
+    @ViewChild('modalAddEvent', { static: true }) modalAddEvent: TemplateRef<any>;
 
     view: CalendarView = CalendarView.Month;
     CalendarView = CalendarView;
@@ -74,13 +80,15 @@ export class ScheduleComponent implements OnInit {
     modalData: {
         action: string;
         event: CalendarEvent;
-    };
+    } = null;
+
+    newEventForm: FormGroup;
 
     actions: CalendarEventAction[] = [
         {
             label: '<i class="fa fa-fw fa-pencil"></i>',
             a11yLabel: 'Edit',
-            onClick: ({ event }: { event: CalendarEvent }): void => {
+            onClick: ({ event }: { event: any }): void => {
                 this.handleEvent('Edited', event);
             }
         },
@@ -89,87 +97,85 @@ export class ScheduleComponent implements OnInit {
             a11yLabel: 'Delete',
             onClick: ({ event }: { event: CalendarEvent }): void => {
                 this.events = this.events.filter(iEvent => iEvent !== event);
-                this.handleEvent('Deleted', event);
+                this.afs.doc(`events/${event.id}`).delete();
             }
         }
     ];
 
+    userID: string = '';
+
     refresh: Subject<any> = new Subject();
 
-    events: CalendarEvent[] = [
-        // {
-        //     start: subDays(startOfDay(new Date()), 1),
-        //     end: addDays(new Date(), 1),
-        //     title: 'A 3 day event',
-        //     color: colors.red,
-        //     actions: this.actions,
-        //     allDay: true,
-        //     resizable: {
-        //         beforeStart: true,
-        //         afterEnd: true
-        //     },
-        //     draggable: true
-        // },
-        // {
-        //     start: startOfDay(new Date()),
-        //     title: 'An event with no end date',
-        //     color: colors.yellow,
-        //     actions: this.actions
-        // },
-        // {
-        //     start: subDays(endOfMonth(new Date()), 3),
-        //     end: addDays(endOfMonth(new Date()), 3),
-        //     title: 'A long event that spans 2 months',
-        //     color: colors.blue,
-        //     allDay: true
-        // },
-        // {
-        //     start: addHours(startOfDay(new Date()), 2),
-        //     end: addHours(new Date(), 2),
-        //     title: 'A draggable and resizable event',
-        //     color: colors.yellow,
-        //     actions: this.actions,
-        //     resizable: {
-        //         beforeStart: true,
-        //         afterEnd: true
-        //     },
-        //     draggable: true
-        // }
-    ];
+    events: CalendarEvent[] = [];
 
     activeDayIsOpen: boolean = false;
 
-    constructor(private modal: NgbModal, public auth: AuthService, public afs: AngularFirestore) { }
+    isEventSubmitted: boolean = false;
+
+    constructor(private modal: NgbModal, public auth: AuthService, public afs: AngularFirestore, private fs: FriendsService, private fb: FormBuilder) { }
 
     ngOnInit() {
-        let userID: string;
+        this.newEventForm = this.fb.group({
+            title: this.fb.control(this.modalData ? this.modalData.event.title : ''),
+            color: this.fb.group({
+                color: this.fb.control(this.modalData ? this.modalData.event.color : 'red', [Validators.required])
+            }),
+            startDate: this.fb.control(this.modalData ? this.modalData.event.start : '', [Validators.required]),
+            endDate: this.fb.control(this.modalData ? this.modalData.event.end : '', [Validators.required]),
+            allDay: this.fb.control(this.modalData ? this.modalData.event.allDay : false)
+        });
+
         this.auth.user$.subscribe(user => {
-            userID = user.uid;
-            this.afs.collection<Event>('events', ref => ref.where('uid', '==', userID)).snapshotChanges()
-                .subscribe(actions => {
+            this.userID = user.uid;
+            this.events = [];
+            
+            this.fs.friendsDocument.valueChanges()
+                .subscribe((friendsList: friendsList) => {
+                    const friends = friendsList.friendsList;
+                    if (!friends.find(friend => friend.id === this.userID)) {
+                        const usr: Friend = {
+                            id: this.userID,
+                            name: user.name,
+                            photoURL: user.photoURL
+                        }
+                        friends.push(usr);
+                    }
+
                     this.events = [];
-                    actions.map(a => {
-                        const e = a.payload.doc.data() as Event;
-                        const id = a.payload.doc.id;
+                    for (let friend of friends) {
+                        this.afs.collection<Event>('events', ref => ref.where('uid', '==', friend.id)).snapshotChanges()
+                            .subscribe(actions => {
+                                let events = actions.map(data => {
+                                    let event = data.payload.doc.data() as Event;
+                                    let id = data.payload.doc.id;
+                                    return {
+                                        ...event,
+                                        id
+                                    }
+                                })
+                                for (let event of events) {
+                                    this.addEvent({
+                                        start: new Date(event.start.seconds * 1000),
+                                        end: new Date(event.end.seconds * 1000),
+                                        title: event.title,
+                                        color: this.getColor(event.color),
+                                        allDay: event.allDay,
+                                        actions: this.actions,
+                                        resizable: {
+                                            beforeStart: true,
+                                            afterEnd: true
+                                        },
+                                        draggable: true,
+                                        uid: friend.id,
+                                        id: event.id
+                                    });
+                                    
+                                }
+                                this.refresh.next();
+                            });
                         
-                        console.log(e.start.seconds)
-                        this.addEvent({
-                            start: new Date(e.start.seconds * 1000),
-                            end: new Date(e.end.seconds * 1000),
-                            title: e.title,
-                            color: this.getColor(e.color),
-                            actions: this.actions,
-                            allDay: e.allDay,
-                            resizable: {
-                                beforeStart: true,
-                                afterEnd: true
-                            },
-                            draggable: e.draggable,
-                            id: id
-                        });
-                    });
-                    this.refresh.next();
-                });
+                    }
+            })
         });
     }
 
@@ -221,14 +227,74 @@ export class ScheduleComponent implements OnInit {
 
     handleEvent(action: string, event: CalendarEvent): void {
         this.modalData = { event, action };
-        this.modal.open(this.modalContent, { size: 'lg' });
+        console.log("modalData:", this.modalData)
+        this.newEventForm = this.fb.group({
+            title: this.fb.control(this.modalData ? this.modalData.event.title : ''),
+            color: this.fb.group({
+                color: this.fb.control(this.modalData ? this.modalData.event.color : 'red', [Validators.required])
+            }),
+            startDate: this.fb.control(this.modalData ? this.modalData.event.start : '', [Validators.required]),
+            endDate: this.fb.control(this.modalData ? this.modalData.event.end : '', [Validators.required]),
+            allDay: this.fb.control(this.modalData ? this.modalData.event.allDay : false)
+        });
+        this.modal.open(this.modalAddEvent, { size: 'lg' });
     }
 
     addEvent(event: any): void {
+        if (!this.events.find(evnt => evnt.id === event.id)) {
+            this.events = [
+                ...this.events,
+                event
+            ];
+        }
+    }
+
+    addEventToDatabase(event: any): void {
+        this.afs.collection('events').add(event);
+    }
+
+    updateEventInDatabase(event: any, id: string): void {
+        if (id) {
+            this.afs.doc(`events/${id}`).update(event);
+        } else {
+            this.afs.doc(`events/${event.id}`).update(event);
+        }
+        console.log(this.events);
+        this.events = this.events.filter(iEvent => iEvent.id !== id);
+        const evt = {
+            start: new Date(event.start.seconds * 1000),
+            end: new Date(event.end.seconds * 1000),
+            title: event.title,
+            color: this.getColor(event.color),
+            allDay: event.allDay,
+            actions: this.actions,
+            resizable: {
+                beforeStart: true,
+                afterEnd: true
+            },
+            draggable: true,
+            uid: this.userID,
+            id: event.id
+        }
         this.events = [
             ...this.events,
-            event
-        ];
+            evt
+        ]
+    }
+
+    addEvent_Button(): void {
+        console.log("Add Event")
+        this.modalData = null;
+        this.newEventForm = this.fb.group({
+            title: this.fb.control(''),
+            color: this.fb.group({
+                color: this.fb.control('', [Validators.required])
+            }),
+            startDate: this.fb.control('', [Validators.required]),
+            endDate: this.fb.control('', [Validators.required]),
+            allDay: this.fb.control(false)
+        });
+        this.modal.open(this.modalAddEvent, { size: 'lg' });
     }
 
     deleteEvent(eventToDelete: CalendarEvent) {
@@ -250,8 +316,31 @@ export class ScheduleComponent implements OnInit {
         this.activeDayIsOpen = false;
     }
 
-    getDateFrom1970(seconds: number) {
-        const nanoseconds = seconds * 1000;
+    submitNewEvent(id: string) {
+        this.isEventSubmitted = true;
+        if (this.newEventForm.valid) {
+            const newEvent = {
+                title: this.newEventForm.get('title').value,
+                color: this.newEventForm.get('color').value.color,
+                start: new Date(this.newEventForm.get('startDate').value),
+                end: new Date(this.newEventForm.get('endDate').value),
+                allDay: this.newEventForm.get('allDay').value === true ? true : false,
+                uid: this.userID
+            }
+            if (!id) {
+                this.addEventToDatabase(newEvent);
+            } else {
+                console.log(newEvent);
+                this.updateEventInDatabase(newEvent, id);
+            }
+            this.isEventSubmitted = false;
+            this.modal.dismissAll();
+        } else {
+            console.log("Form is Invalid.");
+        }
+    }
 
+    colorSelected(eventColor, color: string): boolean {
+        return this.getColor(color) === eventColor;
     }
 }
