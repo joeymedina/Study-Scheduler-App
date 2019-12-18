@@ -7,7 +7,10 @@
                     <b>Notes:</b> {{ meeting?.notes }}<br>
                     <b>Location:</b> {{ meeting?.location }}<br>
                     <b>Date:</b> {{ meeting?.date.seconds * 1000 | date: 'short'}}<br>
-                    <b>Friend:</b> {{ meeting?.friends }}<br>
+                    <div class="row" style="padding-left: 40%;">
+                        <b class="text-center">Friend:&nbsp;</b> 
+                        <p class="text-center" *ngFor="let friend of meeting?.friends">{{ friend.name }}</p>
+                    </div><br>
                 </div>
 
                 <div *ngIf="editForm">
@@ -31,8 +34,8 @@
                             <!-- <input type="text" formControlName="friends"> -->
                             <select class="custom-select" formControlName="friends">
                                 <option value="" disabled>Choose your friend</option>
-                                <option *ngFor="let friend of friends?.friendsList" [value]="friend?.id">
-                                    {{ friend?.name }}</option>
+                                <option *ngFor="let friend of friends" [value]="friend.id">
+                                    {{ friend.name }}</option>
                             </select>
                         </label><br>
 

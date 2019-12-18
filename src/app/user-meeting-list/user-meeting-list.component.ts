@@ -42,7 +42,7 @@ export class UserMeetingListComponent implements OnInit {
           console.log('No such document!');
         } else {
           this.meetings = doc.data();
-
+          console.log(this.meetings)
         }
       })
       .catch(err => {

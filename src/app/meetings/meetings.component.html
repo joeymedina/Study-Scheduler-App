@@ -41,8 +41,8 @@
                                     <!-- <input type="text" formControlName="friends"> -->
                                     <select class="custom-select" formControlName="friends">
                                         <option value="" disabled>Choose your friend</option>
-                                        <option *ngFor="let friend of friends?.friendsList" [value]="friend?.id">
-                                            {{ friend?.name }}</option>
+                                        <option *ngFor="let friend of friends" [value]="friend.id">
+                                            {{ friend.name }}</option>
                                     </select>
                                 </label>
 
